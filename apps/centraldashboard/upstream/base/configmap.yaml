@@ -8,30 +8,6 @@ data:
     {
         "menuLinks": [
             {
-                "icon": "book",
-                "link": "/jupyter/",
-                "text": "Notebooks",
-                "type": "item"
-            },
-            {
-                "icon": "assessment",
-                "link": "/tensorboards/",
-                "text": "TensorBoards",
-                "type": "item"
-            },
-            {
-                "icon": "device:storage",
-                "link": "/volumes/",
-                "text": "Volumes",
-                "type": "item"
-            },
-            {
-                "icon": "kubeflow:katib",
-                "link": "/katib/",
-                "text": "Katib Experiments",
-                "type": "item"
-            },
-            {
                 "icon": "kubeflow:pipeline-centered",
                 "items": [
                     {

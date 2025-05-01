@@ -4,7 +4,7 @@ metadata:
   name: dex
 data:
   config.yaml: |
-    issuer: http://dex.auth.svc.cluster.local:5556/dex
+    issuer: http://localhost:8080/dex
     storage:
       type: kubernetes
       config:
@@ -16,15 +16,33 @@ data:
       format: text
     oauth2:
       skipApprovalScreen: true
-    enablePasswordDB: true
-    staticPasswords:
-    - email: user@example.com
-      hashFromEnv: DEX_USER_PASSWORD
-      username: user
-      userID: "15841185641784"
+    enablePasswordDB: false
     staticClients:
     # https://github.com/dexidp/dex/pull/1664
     - idEnv: OIDC_CLIENT_ID
       redirectURIs: ["/oauth2/callback"]
       name: 'Dex Login Application'
       secretEnv: OIDC_CLIENT_SECRET
+    - id: kfp-cli
+      secret: ""                      # empty secret → public client + PKCE
+      name: "Kubeflow SDK/CLI Client Flow"
+      public: true
+      redirectURIs:
+        - "/device/callback"
+        - "http://127.0.0.1:8010/"
+        - "urn:ietf:wg:oauth:2.0:oob" # not actually used by device flow
+
+    connectors:
+    - type: google
+      id: google
+      name: google
+      config:
+        clientID: <NONONONONO>
+        clientSecret: <NONONONONO>
+        redirectURI: http://localhost:8080/dex/callback
+        insecureSkipEmailVerified: true
+        scopes:
+        - openid
+        - profile
+        - email
+        #- groups # groups might be used in the future

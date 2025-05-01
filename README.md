@@ -156,7 +156,7 @@ kubectl create secret generic regcred \
 You can install all Kubeflow official components (residing under `apps`) and all common services (residing under `common`) using the following command:
 
 ```sh
-while ! kustomize build example | kubectl apply --server-side --force-conflicts -f -; do echo "Retrying to apply resources"; sleep 20; done
+while ! kustomize build kfp-multi-user-only | kubectl apply --server-side --force-conflicts -f -; do echo "Retrying to apply resources"; sleep 20; done
 ```
 
 Once everything is installed successfully, you can access the Kubeflow Central Dashboard [by logging in to your cluster](#connect-to-your-kubeflow-cluster).
@@ -243,12 +243,12 @@ kubectl wait --for=condition=Ready pod -l 'app.kubernetes.io/name=oauth2-proxy' 
 
 # Option 2: works on Kind, K3D, Rancher, GKE, and many other clusters with the proper configuration, and allows K8s service account tokens to be used
 #           from outside the cluster via the Istio ingress-gateway. For example, for automation with GitHub Actions.
-#           In the end, you need to patch the issuer and jwksUri fields in the request authentication resource in the istio-system namespace 
+#           In the end, you need to patch the issuer and jwksUri fields in the request authentication resource in the istio-system namespace
 #           as done in /common/oauth2-proxy/overlays/m2m-dex-and-kind/kustomization.yaml.
 #           Please follow the guidelines in the section Upgrading and Extending below for patching.
 #           curl --insecure -H "Authorization: Bearer `cat /var/run/secrets/kubernetes.io/serviceaccount/token`"  https://kubernetes.default/.well-known/openid-configuration
 #           from a pod in the cluster should provide you with the issuer of your cluster.
-# 
+#
 #kustomize build common/oauth2-proxy/overlays/m2m-dex-and-kind/ | kubectl apply -f -
 #kubectl wait --for=condition=Ready pod -l 'app.kubernetes.io/name=oauth2-proxy' --timeout=180s -n oauth2-proxy
 #kubectl wait --for=condition=Ready pod -l 'app.kubernetes.io/name=cluster-jwks-proxy' --timeout=180s -n istio-system
@@ -460,7 +460,7 @@ kustomize build apps/jupyter/jupyter-web-app/upstream/overlays/istio | kubectl a
 
 This feature is still in development.
 
-#### PVC Viewer Controller 
+#### PVC Viewer Controller
 
 Install the PVC Viewer Controller official Kubeflow component:
 
@@ -569,9 +569,9 @@ For security reasons, we don't want to use the default username and email for th
 
 ### Change Default User Password
 
-If you have an identity provider (LDAP, GitHub, Google, Microsoft, OIDC, SAML, GitLab) available, you should use that instead of static passwords and connect it to oauth2-proxy or Dex as explained in the sections above. This is best practice instead of using static passwords. 
+If you have an identity provider (LDAP, GitHub, Google, Microsoft, OIDC, SAML, GitLab) available, you should use that instead of static passwords and connect it to oauth2-proxy or Dex as explained in the sections above. This is best practice instead of using static passwords.
 
-For security reasons, we don't want to use the default static password for the default Kubeflow user when installing in security-sensitive environments. Instead, you should define your own password and apply it either **before creating the cluster** or **after creating the cluster**. 
+For security reasons, we don't want to use the default static password for the default Kubeflow user when installing in security-sensitive environments. Instead, you should define your own password and apply it either **before creating the cluster** or **after creating the cluster**.
 
 Pick a password for the default user, with email `user@example.com`, and hash it using `bcrypt`:
 
